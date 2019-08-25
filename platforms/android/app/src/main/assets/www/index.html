@@ -18,15 +18,37 @@
 
     function handleOpenURL(url) {
       console.log("received url: " + url);
+      var queryParamsString = url.split("mybarcodereader://scan?").pop();
+      queryParamsString.split("&");
+
+      if(queryParamsString === "")
+        return;
+
+      var queryParams = queryParamsString.split("&").map( function(param) {
+        if(param === "")
+          return { name: "", value: "" }
+        return { name: param.slice(0, param.indexOf("=")), value: param.slice(param.indexOf("=") +1) }
+      })
+
+      var callback = queryParams.find( function(param) {
+        return param.name == "callback"
+      });
+
+      if(!callback)
+        return console.log('callback not defined !!');
+
+      
+      scan(callback.value)
     }
     
-    function scan() {
+    function scan(callback) {
 
       
       cordova.plugins.barcodeScanner
       .scan(
         function(barcodeData) {
-          window.open('http://www.google.com?q='+barcodeData.text, '_system')
+          console.log("callback :: ", callback + '?barcode='+barcodeData.text, '_system')
+          window.open(callback + '?barcode='+barcodeData.text, '_system')
         },
         function(err) {
             console.log('Error', err);
@@ -47,9 +69,9 @@
 
       window.onload= function() {
         eruda.init();
-        setTimeout(function() {
-          scan()
-        }, 2000)
+        // setTimeout(function() {
+        //   scan()
+        // }, 2000)
       }
   </script>
 

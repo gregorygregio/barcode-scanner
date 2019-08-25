@@ -27,7 +27,7 @@
       var queryParams = queryParamsString.split("&").map( function(param) {
         if(param === "")
           return { name: "", value: "" }
-        return { name: param.slice(0, param.indexOf("=")), value: param.slice(param.indexOf("=")) }
+        return { name: param.slice(0, param.indexOf("=")), value: param.slice(param.indexOf("=") +1) }
       })
 
       var callback = queryParams.find( function(param) {
@@ -35,7 +35,7 @@
       });
 
       if(!callback)
-        return;
+        return console.log('callback not defined !!');
 
       
       scan(callback.value)
@@ -47,6 +47,7 @@
       cordova.plugins.barcodeScanner
       .scan(
         function(barcodeData) {
+          console.log("callback :: ", callback + '?barcode='+barcodeData.text, '_system')
           window.open(callback + '?barcode='+barcodeData.text, '_system')
         },
         function(err) {
