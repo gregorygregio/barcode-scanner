@@ -12,6 +12,13 @@
     },
     "phonegap-plugin-barcodescanner": {
       "PACKAGE_NAME": "io.cordova.hellocordova"
+    },
+    "cordova-plugin-inappbrowser": {
+      "PACKAGE_NAME": "io.cordova.hellocordova"
+    },
+    "cordova-plugin-customurlscheme": {
+      "URL_SCHEME": "mybarcodereader",
+      "PACKAGE_NAME": "io.cordova.hellocordova"
     }
   },
   "dependent_plugins": {}

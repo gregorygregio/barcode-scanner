@@ -10,5 +10,47 @@
 <link rel="stylesheet" href="styles.3ff695c00d717f2d2a11.css"></head>
 <body>
   <app-root></app-root>
-<script src="runtime-es2015.27965c48d77c449cb93c.js" type="module"></script><script src="polyfills-es2015.9672279e61a4a771b6a3.js" type="module"></script><script src="runtime-es5.ee2dcdf2e59a31c9da78.js" nomodule></script><script src="polyfills-es5.311fade94219c4610cd7.js" nomodule></script><script src="main-es2015.15694e9abc83d89b5594.js" type="module"></script><script src="main-es5.e4208bdd2f7f4cea1598.js" nomodule></script></body>
+  <script src="cordova.js"></script>
+  <script src="eruda.min.js"></script>
+  <!-- <script src="LaunchMyApp.js"></script> -->
+
+  <script>
+
+    // function handleOpenURL(url) {
+    //   console.log("received url: " + url);
+    // }
+    
+    function scan() {
+
+      
+      cordova.plugins.barcodeScanner
+      .scan(
+        function(barcodeData) {
+          window.open('http://www.google.com?q='+barcodeData.text, '_system')
+        },
+        function(err) {
+            console.log('Error', err);
+        },
+        {
+            preferFrontCamera : false, // iOS and Android
+            showFlipCameraButton : true, // iOS and Android
+            showTorchButton : true, // iOS and Android
+            torchOn: false, // Android, launch with the torch switched on (if available)
+            prompt : "Place a barcode inside the scan area", // Android
+            resultDisplayDuration: 500, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
+            formats : "QR_CODE,PDF_417,CODE_128", // default: all but PDF_417 and RSS_EXPANDED
+            orientation : "landscape", // Android only (portrait|landscape), default unset so it rotates with the device
+            disableAnimations : true, // iOS
+            disableSuccessBeep: false // iOS and Android
+        })
+      }
+
+      window.onload= function() {
+        eruda.init();
+        setTimeout(function() {
+          scan()
+        }, 2000)
+      }
+  </script>
+
 </html>

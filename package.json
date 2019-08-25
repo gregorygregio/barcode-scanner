@@ -15,12 +15,23 @@
   "dependencies": {
     "cordova-android": "^8.0.0",
     "cordova-browser": "^6.0.0",
-    "phonegap-plugin-barcodescanner": "^8.1.0"
+    "cordova-plugin-customurlscheme": "^4.4.0",
+    "cordova-plugin-inappbrowser": "^3.1.0",
+    "ionic-plugin-deeplinks": "^1.0.20",
+    "phonegap-plugin-barcodescanner": "^8.1.0",
+    "uk.co.workingedge.phonegap.plugin.launchnavigator": "^5.0.4"
   },
   "cordova": {
     "plugins": {
       "phonegap-plugin-barcodescanner": {},
-      "cordova-plugin-whitelist": {}
+      "cordova-plugin-whitelist": {},
+      "cordova-plugin-inappbrowser": {},
+      "cordova-plugin-customurlscheme": {
+        "URL_SCHEME": "mybarcodereader",
+        "ANDROID_SCHEME": " ",
+        "ANDROID_HOST": " ",
+        "ANDROID_PATHPREFIX": "/"
+      }
     },
     "platforms": [
       "android",
