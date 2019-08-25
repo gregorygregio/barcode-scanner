@@ -9,7 +9,12 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 <link rel="stylesheet" href="styles.3ff695c00d717f2d2a11.css"></head>
 <body>
-  <app-root></app-root>
+  
+  <div>
+    <button onclick="scan()">
+      Scan
+    </button>
+  </div>
   <script src="cordova.js"></script>
   <script src="eruda.min.js"></script>
   <script src="LaunchMyApp.js"></script>
@@ -47,8 +52,11 @@
       cordova.plugins.barcodeScanner
       .scan(
         function(barcodeData) {
-          console.log("callback :: ", callback + '?barcode='+barcodeData.text, '_system')
-          window.open(callback + '?barcode='+barcodeData.text, '_system')
+          // console.log("callback :: ", callback + '?barcode='+barcodeData.text, '_system')
+          if (callback)
+            window.open(callback + '?barcode='+barcodeData.text, '_system')
+          else
+            alert(barcodeData.text);
         },
         function(err) {
             console.log('Error', err);
