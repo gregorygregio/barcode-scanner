@@ -23,7 +23,9 @@
       "id": "uk.co.workingedge.phonegap.plugin.launchnavigator@5.0.4"
     },
     "is_top_level": true,
-    "variables": {}
+    "variables": {
+      "LOCATION_USAGE_DESCRIPTION": "This app requires access to your location for navigation purposes"
+    }
   },
   "cordova-plugin-inappbrowser": {
     "source": {
@@ -52,5 +54,21 @@
     "variables": {
       "URL_SCHEME": "mybarcodereader"
     }
+  },
+  "cordova-plugin-actionsheet": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-actionsheet@2"
+    },
+    "is_top_level": false,
+    "variables": {}
+  },
+  "cordova-plugin-dialogs": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-dialogs@*"
+    },
+    "is_top_level": false,
+    "variables": {}
   }
 }
