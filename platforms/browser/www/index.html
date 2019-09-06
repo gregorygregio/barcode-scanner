@@ -6,27 +6,168 @@
   <base href="./">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/x-icon" href="logo-adv.png">
 <link rel="stylesheet" href="styles.3ff695c00d717f2d2a11.css"></head>
 <body>
-  <app-root></app-root>
+  <style>
+
+
+    body {
+      background: #ecf0f5;
+      background-image: linear-gradient(141deg, #ecf0f5 0%, #cadef5 75%, #89c7eb 100%);
+    }
+
+
+    .btn-scan {
+      width: 100%;
+      color: #fff;
+      background-color: #007ed9;
+      box-shadow: inset 0 1px 0 0 rgba(102,191,255,0.5), 0 0 0 0 rgba(0,149,255,0);
+
+      border: 1px solid #07c;
+      border-radius: 3px;
+
+      font-size: 22px;
+      font-weight: 400;
+
+      padding: 10px;
+    }
+
+    .container {
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .card {
+
+      min-height: 35vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+
+      transition: box-shadow 280ms cubic-bezier(.4,0,.2,1);
+      position: relative;
+      padding: 16px;
+      border-radius: 4px;
+
+      background: white;
+      color: rgba(0, 0, 0, 0.87);
+
+      font-family: Roboto, "Helvetica Neue", sans-serif;
+    }
+
+
+    .card-img {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+
+    .fill-space {
+      -webkit-box-flex: 1;
+      flex: 1 1 auto;
+    }
+
+
+    #callbackInput {
+      width: 100%;
+      padding: 8px 3px;
+      box-sizing: border-box;
+      border: none;
+      
+      outline: none;
+    }
+
+    #requestType {
+      padding: 8px 3px;
+      box-sizing: border-box;
+      border: none;
+      outline: none;
+    }
+
+    .suffixed-input {
+      width: 100%;
+      display: flex;
+      margin-bottom: 15px;
+
+      border-bottom: solid 1px #666;
+    }
+  </style>
+  
+  <div class='container'>
+    <div class="card">
+        <div class="card-img">
+            <img src="logo-adv.png" alt="logo-adv">
+        </div>
+
+        <div class="fill-space"></div>
+
+        <div class="callback-input-wrapper">
+            <label for="callbackInput">Url</label>
+
+            <div class="suffixed-input">
+              <select id="requestType">
+                <option value="https://" selected>https://</option>
+                <option value="http://">http://</option>
+              </select>
+              <input type="text" id="callbackInput">
+            </div>
+        </div>
+
+        <div class="fill-space"></div>
+        <button class="btn-scan" id="scanBtn" >
+          Scan
+        </button>
+    </div>
+  </div>
   <script src="cordova.js"></script>
-  <script src="eruda.min.js"></script>
-  <!-- <script src="LaunchMyApp.js"></script> -->
+  
+  <script src="LaunchMyApp.js"></script>
 
   <script>
 
-    // function handleOpenURL(url) {
-    //   console.log("received url: " + url);
-    // }
+    function handleOpenURL(url) {
+      console.log("received url: " + url);
+      var queryParamsString = url.split("mybarcodereader://scan?").pop();
+      queryParamsString.split("&");
+
+      if(queryParamsString === "")
+        return;
+
+      var queryParams = queryParamsString.split("&").map( function(param) {
+        if(param === "")
+          return { name: "", value: "" }
+        return { name: param.slice(0, param.indexOf("=")), value: param.slice(param.indexOf("=") +1) }
+      })
+
+      var callback = queryParams.find( function(param) {
+        return param.name == "callback"
+      });
+
+      if(!callback)
+        return console.log('callback not defined !!');
+
+      
+      scan(callback.value)
+    }
     
-    function scan() {
+    function scan(callback) {
 
       
       cordova.plugins.barcodeScanner
       .scan(
         function(barcodeData) {
-          window.open('http://www.google.com?q='+barcodeData.text, '_system')
+          // console.log("callback :: ", callback + '?barcode='+barcodeData.text, '_system')
+          if (callback)
+            window.open(callback + '?barcode='+barcodeData.text, '_system')
+          else
+            alert(barcodeData.text);
         },
         function(err) {
             console.log('Error', err);
@@ -45,11 +186,29 @@
         })
       }
 
-      window.onload= function() {
-        eruda.init();
-        setTimeout(function() {
-          scan()
-        }, 2000)
+
+
+
+
+
+      window.onload = function() {
+        var requestType = document.querySelector("#requestType");
+        var callbackInput = document.querySelector("#callbackInput");
+        var scanBtn = document.querySelector("#scanBtn");
+        
+        requestType.onchange = function() {
+          callbackInput.focus()
+        }
+
+        scanBtn.onclick = function() {
+          if(callbackInput.value === "") {
+
+            return;
+          }
+          scan(requestType.value + callbackInput.value);
+        }
+
+
       }
   </script>
 
