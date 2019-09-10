@@ -1,0 +1,57 @@
+<template>
+
+
+
+  <div class="page" data-name="catalog">
+    <div class="navbar">
+      <div class="navbar-inner sliding">
+          <div class="left">
+              <a href="#" class="link back">
+                <i class="icon icon-back"></i>
+                <span class="ios-only">Back</span>
+              </a>
+            </div>
+        <div class="title">{{ $route.params.code }}</div>
+      </div>
+    </div>
+    <div class="page-content">
+
+      <div class="block-title">Code read: </div>
+      <div class="block block-strong">
+        <p>{{ $route.params.code }}</p>
+      </div>
+
+      <div class="block-title">Launched URL: </div>
+      <div class="block block-strong">
+        <p>{{ $route.query.callback }}</p>
+      </div>
+
+      
+
+      <div class="block block-strong">
+          <div class="row">
+            <div class="col-100">
+              <button class="button button-raised button-large-ios button-round button-fill " @click='relaunch("{{ $route.params.code }}", "{{ $route.query.callback }}")'>Launch again</button>
+            </div>
+          </div>
+      </div>
+      
+
+        
+
+    </div>
+  </div>
+
+</template>
+<script>
+  return {
+    data: function () {
+      return {};
+    },
+    methods: {
+      relaunch(code, callback) {
+        window.open(callback + '?barcode=' + code, '_system');
+      }
+    }
+  };
+</script>

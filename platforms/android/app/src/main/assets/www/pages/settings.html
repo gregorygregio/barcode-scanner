@@ -1,0 +1,125 @@
+<template>
+    <div class="page" data-name="settings">
+      <div class="navbar">
+        <div class="navbar-inner sliding">
+          <div class="title">Settings</div>
+        </div>
+      </div>
+      <div class="page-content">
+        <div class="block-title">Code formats</div>
+        <div class="list ">
+          <ul>
+            {{#each formats}}
+              <li   >
+                  <label class="item-checkbox item-content">
+                    <input type="checkbox" @change="onFormatSelected" name="checkbox" value="{{code}}" {{checked}}/>
+                    <i class="icon icon-checkbox"></i>
+                    <div class="item-inner">
+                      <div class="item-title">{{label}}</div>
+                    </div>
+                  </label>
+                </li>
+            {{/each}}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </template>
+  <script>
+    return {
+      data: function () {
+        return {
+          formats: [
+            {
+              code: 'CODE_128', label: 'Code 128', checked: ''
+            },
+            {
+              code: 'QR_CODE', label: 'QR code', checked: ''
+            },
+            {
+              code: 'PDF_417', label: 'PDF 417', checked: ''
+            },
+
+            {
+              code: 'ITF', label: 'ITF', checked: ''
+            },
+
+            {
+              code: 'CODE_39', label: 'CODE 39', checked: ''
+            },
+
+            {
+              code: 'CODE_93', label: 'CODE 93', checked: ''
+            },
+
+            {
+              code: 'EAN_8', label: 'EAN 8', checked: ''
+            },
+
+            {
+              code: 'EAN_13', label: 'EAN 13', checked: ''
+            },
+
+            {
+              code: 'UPC_A', label: 'UPC A', checked: ''
+            },
+
+            {
+              code: 'UPC_E', label: 'UPC E', checked: ''
+            },
+
+            {
+              code: 'AZTEC', label: 'AZTEC', checked: ''
+            },
+
+
+
+          ]
+  
+        };
+      },
+      beforeCreate: function() {
+
+        var codeFormats = localStorage.getItem('codeFormats');
+
+        if(!codeFormats) {
+          codeFormats = [ "QR_CODE", "CODE_128"];
+        } else {
+          codeFormats = JSON.parse(codeFormats);
+        }
+
+        this.formats.forEach(function(item){
+          item.checked = codeFormats.includes(item.code) ? 'checked': '' 
+        })
+        
+      },
+      methods: {
+        onFormatSelected(event) {
+          var value = event.target.value;
+
+          var codeFormats = localStorage.getItem('codeFormats');
+
+          if(!codeFormats) {
+            codeFormats = [ "QR_CODE", "PDF_417", "CODE_128"];
+          } else {
+            codeFormats = JSON.parse(codeFormats);
+          }
+
+          if(!event.target.checked) {
+            codeFormats = codeFormats.filter(function(format) {
+              return format !== value;
+            })
+          } else {
+            if(!codeFormats.includes(value))
+              codeFormats.push(value);
+          }
+
+          localStorage.setItem('codeFormats', JSON.stringify(codeFormats))
+          
+        }
+      }
+
+
+    };
+  </script>
+  

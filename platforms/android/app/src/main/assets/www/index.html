@@ -1,151 +1,241 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
+
 <head>
   <meta charset="utf-8">
-  <title>BarcodeProject</title>
-  <base href="./">
+  <!--
+  Customize this policy to fit your own app's needs. For more guidance, see:
+      https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+  Some notes:
+      * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+      * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+      * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+          * Enable inline JS: add 'unsafe-inline' to default-src
+  -->
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: gap: content:">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#2196f3">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="msapplication-tap-highlight" content="no">
+  <title>My App</title>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="logo-adv.png">
-<link rel="stylesheet" href="styles.3ff695c00d717f2d2a11.css"></head>
+  <link rel="stylesheet" href="framework7/css/framework7.bundle.min.css">
+  <link rel="stylesheet" href="css/icons.css">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+
 <body>
-  <style>
+  <div id="app">
+    <!-- Status bar overlay for fullscreen mode-->
+    <div class="statusbar"></div>
 
 
-    body {
-      background: #ecf0f5;
-      background-image: linear-gradient(141deg, #ecf0f5 0%, #cadef5 75%, #89c7eb 100%);
-    }
-
-
-    .btn-scan {
-      width: 100%;
-      color: #fff;
-      background-color: #007ed9;
-      box-shadow: inset 0 1px 0 0 rgba(102,191,255,0.5), 0 0 0 0 rgba(0,149,255,0);
-
-      border: 1px solid #07c;
-      border-radius: 3px;
-
-      font-size: 22px;
-      font-weight: 400;
-
-      padding: 10px;
-    }
-
-    .container {
-      width: 100%;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .card {
-
-      min-height: 35vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-
-      box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
-
-      transition: box-shadow 280ms cubic-bezier(.4,0,.2,1);
-      position: relative;
-      padding: 16px;
-      border-radius: 4px;
-
-      background: white;
-      color: rgba(0, 0, 0, 0.87);
-
-      font-family: Roboto, "Helvetica Neue", sans-serif;
-    }
-
-
-    .card-img {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      margin-bottom: 25px;
-    }
-
-
-    .fill-space {
-      -webkit-box-flex: 1;
-      flex: 1 1 auto;
-    }
-
-
-    #callbackInput {
-      width: 100%;
-      padding: 8px 3px;
-      box-sizing: border-box;
-      border: none;
-      
-      outline: none;
-    }
-
-    #requestType {
-      padding: 8px 3px;
-      box-sizing: border-box;
-      border: none;
-      outline: none;
-    }
-
-    .suffixed-input {
-      width: 100%;
-      display: flex;
-      margin-bottom: 15px;
-
-      border-bottom: solid 1px #666;
-      background: #fff;
-    }
-
-    .error-msg {
-        color: #f44336;
-        font-weight: 400;
-        line-height: 1.125;
-        font-family: Roboto, "Helvetica Neue", sans-serif;
-        display: none;
-
-        margin-top: -10px;
-        margin-bottom: 15px;
-    }
-  </style>
-  
-  <div class='container'>
-    <div class="card">
-        <div class="card-img">
-            <img src="logo-adv.png" alt="logo-adv">
+    <!-- Views/Tabs container -->
+    <div class="views tabs safe-areas">
+      <!-- Tabbar for switching views-tabs -->
+      <div class="toolbar tabbar-labels toolbar-bottom">
+        <div class="toolbar-inner">
+          <a href="#view-home" class="tab-link tab-link-active">
+            <i class="icon f7-icons ios-only">home</i>
+            <i class="icon f7-icons ios-only icon-ios-fill">home_fill</i>
+            <i class="icon material-icons md-only">home</i>
+            <span class="tabbar-label">Home</span>
+          </a>
+          <a href="#view-catalog" class="tab-link">
+            <i class="icon f7-icons ios-only">list</i>
+            <i class="icon f7-icons ios-only icon-ios-fill">list_fill</i>
+            <i class="icon material-icons md-only">view_list</i>
+            <span class="tabbar-label">History</span>
+          </a>
+          <a href="#view-settings" class="tab-link">
+            <i class="icon f7-icons ios-only">settings</i>
+            <i class="icon f7-icons ios-only icon-ios-fill">settings_fill</i>
+            <i class="icon material-icons md-only">settings</i>
+            <span class="tabbar-label">Settings</span>
+          </a>
         </div>
+      </div>
+      <!-- Your main view/tab, should have "view-main" class. It also has "tab-active" class -->
+      <div id="view-home" class="view view-main tab tab-active">
+        <!-- Page, data-name contains page name which can be used in page callbacks -->
+        <div class="page" data-name="home">
+          <!-- Top Navbar -->
+          <div class="navbar">
+            <div class="navbar-inner">
 
-        <div class="fill-space"></div>
+              <div class="title sliding">Home</div>
 
-        <div class="callback-input-wrapper">
-            <label for="callbackInput">URL</label>
+            </div>
+          </div>
 
-            <div class="suffixed-input">
-              <select id="requestType">
-                <option value="https://" selected>https://</option>
-                <option value="http://">http://</option>
-              </select>
-              <input type="text" id="callbackInput">
+          <!-- Scrollable page content-->
+          <div class="page-content">
+            <div class="block block-strong">
+              <h3>Welcome !</h3>
+              <p>Read barcodes and QR codes and launch their value as a parâmeter for your web application.</p>
+              <p>Insert the website to be launched in the callback URL field and start the scanner.</p>
             </div>
 
-            <div class="error-msg" id="errorMsg">
-              Please, insert the url to be launched when the barcode is read
-            </div>
-        </div>
 
-        <div class="fill-space"></div>
-        <button class="btn-scan" id="scanBtn" >
-          Scan
-        </button>
+            <div class="block-title">Callback URL</div>
+            <div class="block block-strong">
+
+              <div class="row">
+
+                <div class="col-100">
+                  <div class="item-content item-input">
+                    <div class="item-inner">
+                      <div class="item-title item-label">Protocol</div>
+                      <div class="item-input-wrap">
+                        <select id="requestType">
+                          <option value="https://" selected>https://</option>
+                          <option value="http://">http://</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="col-100">
+                      <div class="item-title item-label">URL</div>
+                      <div class="item-input-wrap">
+                        <input type="text" id="callbackInput" placeholder="www.example.com" />
+                      </div>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="block-title">Scan</div>
+            <div class="block block-strong">
+
+
+              <div class="row">
+                <div class="col-100">
+                  <button class="button button-raised button-large-ios button-round button-fill " id="scanBtn">Scan</button>
+                </div>
+              </div>
+            </div>
+
+
+
+            <div class="block-title searchbar-hide-on-search">About</div>
+            <div class="list links-list searchbar-hide-on-search">
+              <ul>
+                <li>
+                  <a href="/developers">Developers</a>
+                </li>
+              </ul>
+              <ul>
+                <li>
+                  <a class="link external" href="https://www.advtecnologia.com.br/">Our website</a>
+                </li>
+              </ul>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Catalog View -->
+      <div id="view-catalog" class="view tab">
+        <!-- Catalog page will be loaded here dynamically from /catalog/ route -->
+      </div>
+
+      <!-- Settings View -->
+      <div id="view-settings" class="view tab">
+        <!-- Settings page will be loaded here dynamically from /settings/ route -->
+      </div>
+    </div>
+
+    <!-- Popup -->
+    <div class="popup" id="my-popup">
+      <div class="view">
+        <div class="page">
+          <div class="navbar">
+            <div class="navbar-inner">
+              <div class="title">Warning</div>
+              <div class="right">
+                <a href="#" class="link popup-close">Close</a>
+              </div>
+            </div>
+          </div>
+          <div class="page-content">
+            <div class="block">
+              <p>Please, insert the url to be launched when the barcode is read.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Login Screen -->
+    <div class="login-screen" id="my-login-screen">
+      <div class="view">
+        <div class="page">
+          <div class="page-content login-screen-content">
+            <div class="login-screen-title">Login</div>
+            <div class="list">
+              <ul>
+                <li class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Username</div>
+                    <div class="item-input-wrap">
+                      <input type="text" name="username" placeholder="Your username">
+                    </div>
+                  </div>
+                </li>
+                <li class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Password</div>
+                    <div class="item-input-wrap">
+                      <input type="password" name="password" placeholder="Your password">
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="list">
+              <ul>
+                <li>
+                  <a href="#" class="item-link list-button login-button">Sign In</a>
+                </li>
+              </ul>
+              <div class="block-footer">Some text about login information.<br>Click "Sign In" to close Login Screen
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
+  <!-- Cordova -->
+  <!--
   <script src="cordova.js"></script>
-  
+  -->
+
+  <!-- Framework7 library -->
+  <script src="framework7/js/framework7.bundle.min.js"></script>
+
+  <!-- App routes -->
+  <script src="js/routes.js"></script>
+
+  <!-- Your custom app scripts -->
+  <script src="js/app.js"></script>
+
+  <script src="cordova.js"></script>
+
   <script src="LaunchMyApp.js"></script>
+
+
 
   <script>
 
@@ -154,99 +244,137 @@
       var queryParamsString = url.split("mybarcodereader://scan?").pop();
       queryParamsString.split("&");
 
-      if(queryParamsString === "")
+      if (queryParamsString === "")
         return;
 
-      var queryParams = queryParamsString.split("&").map( function(param) {
-        if(param === "")
+      var queryParams = queryParamsString.split("&").map(function (param) {
+        if (param === "")
           return { name: "", value: "" }
-        return { name: param.slice(0, param.indexOf("=")), value: param.slice(param.indexOf("=") +1) }
+        return { name: param.slice(0, param.indexOf("=")), value: param.slice(param.indexOf("=") + 1) }
       })
 
-      var callback = queryParams.find( function(param) {
+      var callback = queryParams.find(function (param) {
         return param.name == "callback"
       });
 
-      if(!callback)
+      if (!callback)
         return console.log('callback not defined !!');
 
-      
+
       scan(callback.value)
     }
-    
+
     function scan(callback) {
 
       localStorage.setItem('callback', callback);
-      
+
       cordova.plugins.barcodeScanner
-      .scan(
-        function(barcodeData) {
-          if (callback)
-            window.open(callback + '?barcode='+barcodeData.text, '_system')
-         
-        },
-        function(err) {
+        .scan(
+          function (barcodeData) {
+            if (callback && barcodeData.text !== '') {
+              window.open(callback + '?barcode=' + barcodeData.text, '_system');
+
+              var history = localStorage.getItem('history');
+
+              if(!history) {
+                history = [];
+              } else {
+                history = JSON.parse(history);
+              }
+
+              history.push({
+                code: barcodeData.text, url: callback
+              });
+              var history = localStorage.setItem('history', JSON.stringify(history));
+            }
+
+
+          },
+          function (err) {
             console.log('Error', err);
-        },
-        {
-            preferFrontCamera : false, // iOS and Android
-            showFlipCameraButton : true, // iOS and Android
-            showTorchButton : true, // iOS and Android
+          },
+          {
+            preferFrontCamera: false, // iOS and Android
+            showFlipCameraButton: true, // iOS and Android
+            showTorchButton: true, // iOS and Android
             torchOn: false, // Android, launch with the torch switched on (if available)
-            prompt : "Place a barcode inside the scan area", // Android
+            prompt: "Place a barcode inside the scan area", // Android
             resultDisplayDuration: 500, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
-            formats : "QR_CODE,PDF_417,CODE_128", // default: all but PDF_417 and RSS_EXPANDED
-            orientation : "landscape", // Android only (portrait|landscape), default unset so it rotates with the device
-            disableAnimations : true, // iOS
+            formats: getCodeFormats(), // default: all but PDF_417 and RSS_EXPANDED
+            orientation: "landscape", // Android only (portrait|landscape), default unset so it rotates with the device
+            disableAnimations: true, // iOS
             disableSuccessBeep: false // iOS and Android
-        })
+          })
+    }
+
+
+    function getCodeFormats() {
+      var codeFormats = localStorage.getItem('codeFormats');
+      alert('codeFormats:: ' + codeFormats)
+
+      if(!codeFormats) {
+        codeFormats = [ "QR_CODE", "PDF_417", "CODE_128"];
+        localStorage.setItem('codeFormats', JSON.stringify(codeFormats))
+      } else {
+        codeFormats = JSON.parse(codeFormats);
+      }
+
+      return codeFormats.join(',');
+    }
+
+
+
+
+
+
+    window.onload = function () {
+
+
+      var requestType = document.querySelector("#requestType");
+      var callbackInput = document.querySelector("#callbackInput");
+      var scanBtn = document.querySelector("#scanBtn");
+      var popUp = document.querySelector("#my-popup");
+
+
+      var savedCallback = localStorage.getItem('callback');
+
+      if (savedCallback) {
+        var cbChunks = savedCallback.split('://');
+        // var protocol = cbChunks[0];
+
+        callbackInput.value = cbChunks.pop();
+      }
+
+      requestType.onchange = function () {
+        callbackInput.focus()
+      }
+
+      scanBtn.onclick = function () {
+        if(callbackInput.value === "") {
+          showErrorMsg();
+          callbackInput.focus();
+          return;
+        }
+        hideErrorMsg()
+        scan(requestType.value + callbackInput.value);
       }
 
 
-
-
-
-
-      window.onload = function() {
-        var requestType = document.querySelector("#requestType");
-        var callbackInput = document.querySelector("#callbackInput");
-        var scanBtn = document.querySelector("#scanBtn");
-        var errorMsg = document.querySelector("#errorMsg");
-
-
-        var savedCallback = localStorage.getItem('callback');
-
-        if(savedCallback) {
-          var cbChunks = savedCallback.split('://');
-          var protocol = cbChunks[0];
-
-          callbackInput.value = cbChunks.pop();
-        }
-        
-        requestType.onchange = function() {
-          callbackInput.focus()
-        }
-
-        scanBtn.onclick = function() {
-          if(callbackInput.value === "") {
-            showErrorMsg();
-            return;
-          }
-          hideErrorMsg()
-          scan(requestType.value + callbackInput.value);
-        }
-
-
-        var showErrorMsg = function() {
-          errorMsg.style.display = 'block';
-        }
-
-        var hideErrorMsg = function() {
-          errorMsg.style.display = 'none';
-        }
-
-
+      var showErrorMsg = function () {
+        app.popup.open(popUp);
       }
+
+      var hideErrorMsg = function () {
+        app.popup.close(popUp);
+      }
+
+
+    }
+
+    
   </script>
+
+
+</body>
 
 </html>

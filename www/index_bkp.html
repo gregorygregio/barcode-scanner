@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>BarcodeProject</title>
+  <base href="./">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="logo-adv.png">
+<link rel="stylesheet" href="styles.3ff695c00d717f2d2a11.css"></head>
+<body>
+  <style>
+
+
+    body {
+      background: #ecf0f5;
+      background-image: linear-gradient(141deg, #ecf0f5 0%, #cadef5 75%, #89c7eb 100%);
+    }
+
+
+    .btn-scan {
+      width: 100%;
+      color: #fff;
+      background-color: #007ed9;
+      box-shadow: inset 0 1px 0 0 rgba(102,191,255,0.5), 0 0 0 0 rgba(0,149,255,0);
+
+      border: 1px solid #07c;
+      border-radius: 3px;
+
+      font-size: 22px;
+      font-weight: 400;
+
+      padding: 10px;
+    }
+
+    .container {
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .card {
+
+      min-height: 35vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+
+      transition: box-shadow 280ms cubic-bezier(.4,0,.2,1);
+      position: relative;
+      padding: 16px;
+      border-radius: 4px;
+
+      background: white;
+      color: rgba(0, 0, 0, 0.87);
+
+      font-family: Roboto, "Helvetica Neue", sans-serif;
+    }
+
+
+    .card-img {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 25px;
+    }
+
+
+    .fill-space {
+      -webkit-box-flex: 1;
+      flex: 1 1 auto;
+    }
+
+
+    #callbackInput {
+      width: 100%;
+      padding: 8px 3px;
+      box-sizing: border-box;
+      border: none;
+      
+      outline: none;
+    }
+
+    #requestType {
+      padding: 8px 3px;
+      box-sizing: border-box;
+      border: none;
+      outline: none;
+    }
+
+    .suffixed-input {
+      width: 100%;
+      display: flex;
+      margin-bottom: 15px;
+
+      border-bottom: solid 1px #666;
+      background: #fff;
+    }
+
+    .error-msg {
+        color: #f44336;
+        font-weight: 400;
+        line-height: 1.125;
+        font-family: Roboto, "Helvetica Neue", sans-serif;
+        display: none;
+
+        margin-top: -10px;
+        margin-bottom: 15px;
+    }
+  </style>
+  
+  <div class='container'>
+    <div class="card">
+        <div class="card-img">
+            <img src="logo-adv.png" alt="logo-adv">
+        </div>
+
+        <div class="fill-space"></div>
+
+        <div class="callback-input-wrapper">
+            <label for="callbackInput">URL</label>
+
+            <div class="suffixed-input">
+              <select id="requestType">
+                <option value="https://" selected>https://</option>
+                <option value="http://">http://</option>
+              </select>
+              <input type="text" id="callbackInput">
+            </div>
+
+            <div class="error-msg" id="errorMsg">
+              Please, insert the url to be launched when the barcode is read
+            </div>
+        </div>
+
+        <div class="fill-space"></div>
+        <button class="btn-scan" id="scanBtn" >
+          <!-- <i class="fa fa-camera"></i>
+          <i class="fa fa-barcode"></i>
+          <i class="fa fa-check"></i> -->
+          Scan
+        </button>
+    </div>
+  </div>
+  <script src="cordova.js"></script>
+  
+  <script src="LaunchMyApp.js"></script>
+
+  <script>
+
+    function handleOpenURL(url) {
+      console.log("received url: " + url);
+      var queryParamsString = url.split("mybarcodereader://scan?").pop();
+      queryParamsString.split("&");
+
+      if(queryParamsString === "")
+        return;
+
+      var queryParams = queryParamsString.split("&").map( function(param) {
+        if(param === "")
+          return { name: "", value: "" }
+        return { name: param.slice(0, param.indexOf("=")), value: param.slice(param.indexOf("=") +1) }
+      })
+
+      var callback = queryParams.find( function(param) {
+        return param.name == "callback"
+      });
+
+      if(!callback)
+        return console.log('callback not defined !!');
+
+      
+      scan(callback.value)
+    }
+    
+    function scan(callback) {
+
+      localStorage.setItem('callback', callback);
+      
+      cordova.plugins.barcodeScanner
+      .scan(
+        function(barcodeData) {
+          if (callback)
+            window.open(callback + '?barcode='+barcodeData.text, '_system')
+         
+        },
+        function(err) {
+            console.log('Error', err);
+        },
+        {
+            preferFrontCamera : false, // iOS and Android
+            showFlipCameraButton : true, // iOS and Android
+            showTorchButton : true, // iOS and Android
+            torchOn: false, // Android, launch with the torch switched on (if available)
+            prompt : "Place a barcode inside the scan area", // Android
+            resultDisplayDuration: 500, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
+            formats : "QR_CODE,PDF_417,CODE_128", // default: all but PDF_417 and RSS_EXPANDED
+            orientation : "landscape", // Android only (portrait|landscape), default unset so it rotates with the device
+            disableAnimations : true, // iOS
+            disableSuccessBeep: false // iOS and Android
+        })
+      }
+
+
+
+
+
+
+      window.onload = function() {
+        var requestType = document.querySelector("#requestType");
+        var callbackInput = document.querySelector("#callbackInput");
+        var scanBtn = document.querySelector("#scanBtn");
+        var errorMsg = document.querySelector("#errorMsg");
+
+
+        var savedCallback = localStorage.getItem('callback');
+
+        if(savedCallback) {
+          var cbChunks = savedCallback.split('://');
+          // var protocol = cbChunks[0];
+
+          callbackInput.value = cbChunks.pop();
+        }
+        
+        requestType.onchange = function() {
+          callbackInput.focus()
+        }
+
+        scanBtn.onclick = function() {
+          if(callbackInput.value === "") {
+            showErrorMsg();
+            callbackInput.focus();
+            return;
+          }
+          hideErrorMsg()
+          scan(requestType.value + callbackInput.value);
+        }
+
+
+        var showErrorMsg = function() {
+          errorMsg.style.display = 'block';
+        }
+
+        var hideErrorMsg = function() {
+          errorMsg.style.display = 'none';
+        }
+
+
+      }
+  </script>
+
+</html>

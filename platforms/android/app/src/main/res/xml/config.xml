@@ -13,7 +13,7 @@
     <feature name="LaunchMyApp">
         <param name="android-package" value="nl.xservices.plugins.LaunchMyApp" />
     </feature>
-    <name>HelloCordova</name>
+    <name>ADV Barcode Reader</name>
     <description>
         A sample Apache Cordova application that responds to the deviceready event.
     </description>

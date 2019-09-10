@@ -43,7 +43,7 @@
     <feature name="LaunchNavigator">
         <param name="ios-package" value="LaunchNavigatorPlugin" />
     </feature>
-    <name>HelloCordova</name>
+    <name>ADV Barcode Reader</name>
     <description>
         A sample Apache Cordova application that responds to the deviceready event.
     </description>

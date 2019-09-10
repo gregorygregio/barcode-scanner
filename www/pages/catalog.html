@@ -1,0 +1,64 @@
+<template>
+
+
+
+  <div class="page" data-name="catalog">
+    <div class="navbar">
+      <div class="navbar-inner sliding">
+        <div class="title">History</div>
+      </div>
+    </div>
+    <div class="page-content">
+
+
+        <!-- <div class="block-title searchbar-hide-on-search"></div> -->
+        <div class="list links-list searchbar-hide-on-search">
+          <ul>
+            {{#each history}}
+              <li>
+                <a href="/history/{{code}}?callback={{url}}">{{code}}</a>
+              </li>
+            {{/each}}
+          </ul>
+        </div>
+
+    </div>
+  </div>
+
+</template>
+<script>
+  return {
+    data: function () {
+      return {
+        history: [{
+          code: '666', url: 'aasdasd'
+        }]
+      };
+    },
+
+
+    beforeCreate: function() {
+
+      var _setHistory = this.setHistory;
+
+      // setInterval(function() {
+        var history = localStorage.getItem('history');
+
+        if(!history) {
+          history = [];
+        } else {
+          history = JSON.parse(history);
+        }
+        
+        _setHistory(history.reverse());
+      // }, 800);
+
+    },
+    methods: {
+      setHistory(history) {
+        this.history = history;
+      }
+    }
+
+  };
+</script>
